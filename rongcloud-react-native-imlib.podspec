@@ -16,5 +16,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"
-  s.dependency 'RongCloudIM/IMLib', '5.1.3'
+  s.dependency 'RongCloudIM/IMLib', '5.1.9'
 end
