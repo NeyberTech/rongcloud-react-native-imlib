@@ -414,31 +414,6 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void deleteMessages(int type, String targetId, ReadableArray messages, final Promise promise) {
-        Message[] array = new Message[messages.size()];
-        for (int i = 0; i < messages.size(); i += 1) {
-            ReadableMap message = messages.getMap(i);
-            if (message == null) {
-                array[i] = null;
-            } else {
-                array[i] = toMessage(message);
-            }
-        }
-        RongIMClient.getInstance().deleteRemoteMessages(
-                ConversationType.setValue(type), targetId, array, new OperationCallback() {
-                    @Override
-                    public void onSuccess() {
-                        promise.resolve(null);
-                    }
-
-                    @Override
-                    public void onError(RongIMClient.ErrorCode errorCode) {
-                        reject(promise, errorCode);
-                    }
-                });
-    }
-
-    @ReactMethod
     public void searchConversations(String keyword, ReadableArray types, ReadableArray objectNames, final Promise promise) {
         ConversationType[] conversationTypes = toConversationTypeArray(types);
         String[] objectNamesArray = toStringArray(objectNames);
@@ -1101,24 +1076,6 @@ public class RCIMClientModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getNotificationQuietHours(String startTime, int spanMinutes, Promise promise) {
         RongIMClient.getInstance().setNotificationQuietHours(startTime, spanMinutes, createOperationCallback(promise));
-    }
-
-    @ReactMethod
-    public void getNotificationQuietHours(final Promise promise) {
-        RongIMClient.getInstance().getNotificationQuietHours(new GetNotificationQuietHoursCallback() {
-            @Override
-            public void onSuccess(String startTime, int spanMinutes) {
-                WritableMap map = Arguments.createMap();
-                map.putString("startTime", startTime);
-                map.putInt("spanMinutes", spanMinutes);
-                promise.resolve(map);
-            }
-
-            @Override
-            public void onError(ErrorCode errorCode) {
-                reject(promise, errorCode);
-            }
-        });
     }
 
     @ReactMethod
